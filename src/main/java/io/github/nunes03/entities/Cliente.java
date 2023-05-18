@@ -29,4 +29,12 @@ public class Cliente {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            '}';
+    }
 }
