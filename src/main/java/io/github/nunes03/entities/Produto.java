@@ -1,22 +1,36 @@
 package io.github.nunes03.entities;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "produto")
 public class Produto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
+    @Column(
+        name = "descricao"
+    )
     private String descricao;
 
-    private BigDecimal valorUnitario;
+    @Column(
+        name = "preco_unitario",
+        length = 20,
+        precision = 2
+    )
+    private BigDecimal precoUnitario;
 
     public Produto() {
     }
 
-    public Produto(Integer id, String descricao, BigDecimal valorUnitario) {
+    public Produto(Integer id, String descricao, BigDecimal precoUnitario) {
         this.id = id;
         this.descricao = descricao;
-        this.valorUnitario = valorUnitario;
+        this.precoUnitario = precoUnitario;
     }
 
     public Integer getId() {
@@ -35,11 +49,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public BigDecimal getValorUnitario() {
-        return valorUnitario;
+    public BigDecimal getPrecoUnitario() {
+        return precoUnitario;
     }
 
-    public void setValorUnitario(BigDecimal valorUnitario) {
-        this.valorUnitario = valorUnitario;
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
+        this.precoUnitario = precoUnitario;
     }
 }
