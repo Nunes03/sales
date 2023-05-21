@@ -21,8 +21,8 @@ public class Pedido {
 
     @Column(
         name = "total",
-        length = 20,
-        precision = 20
+        precision = 20,
+        scale = 2
     )
     private BigDecimal total;
 

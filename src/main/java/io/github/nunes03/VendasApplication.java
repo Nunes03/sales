@@ -26,7 +26,7 @@ public class VendasApplication {
             var lucas = new Cliente();
             lucas.setNome("Lucas");
 
-            clienteRepository.save(lucas);
+            lucas = clienteRepository.save(lucas);
 
             var pedido = new Pedido();
             pedido.setData(LocalDate.now());
@@ -35,9 +35,9 @@ public class VendasApplication {
 
             pedidoRepository.save(pedido);
 
-            lucas = clienteRepository.findClienteFetchPedidos(1);
-            System.err.println(lucas.getPedidos());
-            //printarTudo(clienteRepository.findAll());
+           var pedidos = pedidoRepository.findByCliente(lucas);
+
+           System.err.println(pedidos);
         };
     }
 

@@ -19,8 +19,8 @@ public class Produto {
 
     @Column(
         name = "preco_unitario",
-        length = 20,
-        precision = 2
+        precision = 20,
+        scale = 2
     )
     private BigDecimal precoUnitario;
 
