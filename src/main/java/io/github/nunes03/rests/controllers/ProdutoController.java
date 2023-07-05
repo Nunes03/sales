@@ -2,6 +2,9 @@ package io.github.nunes03.rests.controllers;
 
 import io.github.nunes03.entities.Produto;
 import io.github.nunes03.repositories.ProdutoRepository;
+import io.github.nunes03.rests.controllers.interfaces.ProdutoRestControllerInterface;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,10 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController()
-@RequestMapping(
-    value = "/api/produto"
-)
-public class ProdutoController {
+@RequestMapping(value = "/api/produto")
+public class ProdutoController implements ProdutoRestControllerInterface {
 
     private final ProdutoRepository produtoRepository;
 
@@ -20,51 +21,56 @@ public class ProdutoController {
         this.produtoRepository = produtoRepository;
     }
 
-    @GetMapping(
-        value = "/{id}"
-    )
-    public Produto getProduto(@PathVariable("id") Integer id) {
-        return produtoRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Produto não encontrado"
-                )
-            );
-    }
-
+    @Override
     @GetMapping()
-    public List<Produto> getProdutos() {
+    public List<Produto> getAll() {
         return produtoRepository.findAll();
     }
 
+    @Override
+    @GetMapping(value = "{id}")
+    public Produto getById(@PathVariable("id") Integer identifier) {
+        return produtoRepository.findById(identifier).orElseThrow(
+            () -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Produto não encontrado."
+            )
+        );
+    }
+
+    @Override
     @PostMapping()
-    @ResponseStatus(
-        value = HttpStatus.CREATED
-    )
-    public Produto save(@RequestBody Produto produto) {
-        return produtoRepository.save(produto);
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public Produto postCreated(@RequestBody Produto entity) {
+        return produtoRepository.save(entity);
     }
 
-    @PutMapping(
-        value = "/{id}"
-    )
-    public Produto update(@PathVariable("id") Integer id, @RequestBody Produto produto) {
-        var produtoFound = getProduto(id);
-        produto.setId(produtoFound.getId());
+    @Override
+    @PutMapping(value = "/{id}")
+    public Produto putUpdated(@RequestBody Produto entity, @PathVariable(value = "id") Integer identifier) {
+        var produtoFound = getById(identifier);
+        entity.setId(produtoFound.getId());
 
-        return produtoRepository.save(produto);
+        return produtoRepository.save(entity);
     }
 
-    @DeleteMapping(
-        value = "/{id}"
-    )
-    @ResponseStatus(
-        value = HttpStatus.NO_CONTENT
-    )
-    public void delete(@PathVariable("id") Integer id) {
-        var produto = getProduto(id);
-        produtoRepository.deleteById(produto.getId());
+    @Override
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteById(Integer identifier) {
+        var produtoFound = getById(identifier);
+        produtoRepository.deleteById(produtoFound.getId());
+    }
+
+    @Override
+    @GetMapping(value = "/filter")
+    public List<Produto> getByExample(Produto produto) {
+        var example = ExampleMatcher
+            .matching()
+            .withIgnoreCase()
+            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        var produtoExample = Example.of(produto, example);
+        return produtoRepository.findAll(produtoExample);
     }
 }
