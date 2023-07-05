@@ -1,12 +1,28 @@
 package io.github.nunes03.entities;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "pedido")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Pedido {
 
     @Id
@@ -37,66 +53,4 @@ public class Pedido {
         fetch = FetchType.LAZY
     )
     private List<ItemPedido> itensPedido;
-
-    public Pedido() {
-    }
-
-    public Pedido(Integer id, LocalDate data, BigDecimal total, Cliente cliente, List<ItemPedido> itensPedido) {
-        this.id = id;
-        this.data = data;
-        this.total = total;
-        this.cliente = cliente;
-        this.itensPedido = itensPedido;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public List<ItemPedido> getItensPedido() {
-        return itensPedido;
-    }
-
-    public void setItensPedido(List<ItemPedido> itensPedido) {
-        this.itensPedido = itensPedido;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-            "id=" + id +
-            ", data=" + data +
-            ", total=" + total +
-            ", cliente=" + cliente.getNome() +
-            //", itensPedido=" + itensPedido +
-            '}';
-    }
 }

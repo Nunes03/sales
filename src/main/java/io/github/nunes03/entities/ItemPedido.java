@@ -1,5 +1,9 @@
 package io.github.nunes03.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +18,9 @@ import javax.persistence.*;
         )
     }
 )
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ItemPedido {
 
     @Id
@@ -37,14 +44,4 @@ public class ItemPedido {
         name = "produto_id"
     )
     private Produto produto;
-
-    public ItemPedido() {
-    }
-
-    public ItemPedido(Integer id, Integer quantidade, Pedido pedido, Produto produto) {
-        this.id = id;
-        this.quantidade = quantidade;
-        this.pedido = pedido;
-        this.produto = produto;
-    }
 }
