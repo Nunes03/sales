@@ -2,16 +2,17 @@ package io.github.nunes03.services;
 
 import io.github.nunes03.dto.ItemPedidoDTO;
 import io.github.nunes03.dto.PedidoDTO;
-import io.github.nunes03.entities.Cliente;
 import io.github.nunes03.entities.ItemPedido;
 import io.github.nunes03.entities.Pedido;
-import io.github.nunes03.entities.Produto;
 import io.github.nunes03.repositories.ItemPedidoRepository;
 import io.github.nunes03.repositories.PedidoRepository;
 import io.github.nunes03.services.interfaces.ClienteServiceInterface;
 import io.github.nunes03.services.interfaces.PedidoServiceInterface;
+import io.github.nunes03.services.interfaces.ProdutoServiceInterface;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class PedidoService implements PedidoServiceInterface {
     private final PedidoRepository pedidoRepository;
 
     private final ClienteServiceInterface clienteServiceInterface;
+
+    private final ProdutoServiceInterface produtoServiceInterface;
 
     private final ItemPedidoRepository itemPedidoRepository;
 
@@ -39,7 +42,7 @@ public class PedidoService implements PedidoServiceInterface {
 
     @Override
     public List<Pedido> findAll() {
-        return null;
+        return pedidoRepository.findAll();
     }
 
     @Override
@@ -74,13 +77,14 @@ public class PedidoService implements PedidoServiceInterface {
         return pedidoRepository.save(pedido);
     }
 
-    private List<ItemPedido> createItensPedido(Pedido pedido, List<ItemPedidoDTO> itemPedidoDTOS) {
-        var itens = new ArrayList<ItemPedido>(itemPedidoDTOS.size());
+    private List<ItemPedido> createItensPedido(Pedido pedido, List<ItemPedidoDTO> itemPedidoDTOs) {
+        validateItens(itemPedidoDTOs);
 
-        itemPedidoDTOS.forEach(
+        var itens = new ArrayList<ItemPedido>(itemPedidoDTOs.size());
+
+        itemPedidoDTOs.forEach(
             itemPedidoDTO -> {
-                var produto = new Produto();
-                produto.setId(itemPedidoDTO.getProduto());
+                var produto = produtoServiceInterface.findById(itemPedidoDTO.getProduto());
 
                 var itemPedido = new ItemPedido();
                 itemPedido.setQuantidade(itemPedidoDTO.getQuantidade());
@@ -93,5 +97,14 @@ public class PedidoService implements PedidoServiceInterface {
         );
 
         return itens;
+    }
+
+    private static void validateItens(List<ItemPedidoDTO> itemPedidoDTOs) {
+        if (itemPedidoDTOs == null || itemPedidoDTOs.isEmpty()) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Não é possível realizar um pedido sem itens."
+            );
+        }
     }
 }

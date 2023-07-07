@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/clientes")
-public class ItemPedidoController implements ItemPedidoRestControllerInterface {
+@RequestMapping(value = "/api/item")
+public class ItemRestController implements ItemPedidoRestControllerInterface {
 
     private final ItemPedidoRepository itemPedidoRepository;
 
-    public ItemPedidoController(ItemPedidoRepository itemPedidoRepository) {
+    public ItemRestController(ItemPedidoRepository itemPedidoRepository) {
         this.itemPedidoRepository = itemPedidoRepository;
     }
 

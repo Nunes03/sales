@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/clientes")
+@RequestMapping(value = "/api/cliente")
 @RequiredArgsConstructor
-public class ClienteController implements ClienteRestControllerInterface {
+public class ClienteRestController implements ClienteRestControllerInterface {
 
     private final ClienteServiceInterface clienteServiceInterface;
 
