@@ -8,7 +8,9 @@ import io.github.nunes03.entities.Pedido;
 import io.github.nunes03.entities.Produto;
 import io.github.nunes03.repositories.ItemPedidoRepository;
 import io.github.nunes03.repositories.PedidoRepository;
+import io.github.nunes03.services.interfaces.ClienteServiceInterface;
 import io.github.nunes03.services.interfaces.PedidoServiceInterface;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,19 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PedidoService implements PedidoServiceInterface {
 
     private final PedidoRepository pedidoRepository;
 
+    private final ClienteServiceInterface clienteServiceInterface;
+
     private final ItemPedidoRepository itemPedidoRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, ItemPedidoRepository itemPedidoRepository) {
-        this.pedidoRepository = pedidoRepository;
-        this.itemPedidoRepository = itemPedidoRepository;
-    }
-
     @Override
-    public Pedido save(PedidoDTO pedidoDTO) {
+    public Pedido create(PedidoDTO pedidoDTO) {
         var pedido = createPedido(pedidoDTO);
         var itensPedido = createItensPedido(pedido, pedidoDTO.getItens());
 
@@ -37,14 +37,38 @@ public class PedidoService implements PedidoServiceInterface {
         return pedido;
     }
 
+    @Override
+    public List<Pedido> findAll() {
+        return null;
+    }
+
+    @Override
+    public Pedido findById(Integer identifier) {
+        return null;
+    }
+
+    @Override
+    public Pedido create(Pedido entity) {
+        return null;
+    }
+
+    @Override
+    public Pedido update(Integer identifier, Pedido entity) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(Integer identifier) {
+
+    }
+
 
     private Pedido createPedido(PedidoDTO pedidoDTO) {
-        var cliente = new Cliente();
-        cliente.setId(pedidoDTO.getCliente());
-
         var pedido = new Pedido();
         pedido.setTotal(pedidoDTO.getTotal());
         pedido.setData(LocalDate.now());
+
+        var cliente = clienteServiceInterface.findById(pedidoDTO.getCliente());
         pedido.setCliente(cliente);
 
         return pedidoRepository.save(pedido);
