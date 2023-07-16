@@ -5,7 +5,6 @@ import io.github.nunes03.repositories.ClienteRepository;
 import io.github.nunes03.services.interfaces.ClienteServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,9 +24,7 @@ public class ClienteService implements ClienteServiceInterface {
 
     @Override
     public Cliente findById(Integer identifier) {
-        var clienteOptional = clienteRepository.findById(identifier);
-
-        return clienteOptional.orElseThrow(
+        return clienteRepository.findById(identifier).orElseThrow(
             () -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "Cliente não encontrado"
@@ -55,13 +52,7 @@ public class ClienteService implements ClienteServiceInterface {
     }
 
     @Override
-    public List<Cliente> findAll(Cliente cliente) {
-        var exampleMatcher = ExampleMatcher
-            .matching()
-            .withIgnoreCase()
-            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-
-        var clienteExample = Example.of(cliente, exampleMatcher);
+    public List<Cliente> findAll(Example<Cliente> clienteExample) {
         return clienteRepository.findAll(clienteExample);
     }
 }

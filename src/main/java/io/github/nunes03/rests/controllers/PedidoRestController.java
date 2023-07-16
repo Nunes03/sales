@@ -38,7 +38,7 @@ public class PedidoRestController implements PedidoRestControllerInterface {
 
     @Override
     public Pedido getById(Integer identifier) {
-        return null;
+        return pedidoServiceInterface.findById(identifier);
     }
 
     @Override

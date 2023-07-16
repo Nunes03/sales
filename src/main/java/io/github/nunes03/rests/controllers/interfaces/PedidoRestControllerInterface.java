@@ -3,6 +3,7 @@ package io.github.nunes03.rests.controllers.interfaces;
 import io.github.nunes03.dto.PedidoDTO;
 import io.github.nunes03.entities.Pedido;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -14,5 +15,6 @@ public interface PedidoRestControllerInterface extends RestControllerInterface<P
     @ResponseStatus(value = HttpStatus.CREATED)
     Integer save(PedidoDTO pedidoDTO);
 
+    @GetMapping(value = "/filter")
     List<Pedido> getByExample(Pedido cliente);
 }

@@ -4,14 +4,15 @@ import io.github.nunes03.dto.ItemPedidoDTO;
 import io.github.nunes03.dto.PedidoDTO;
 import io.github.nunes03.entities.ItemPedido;
 import io.github.nunes03.entities.Pedido;
-import io.github.nunes03.repositories.ItemPedidoRepository;
 import io.github.nunes03.repositories.PedidoRepository;
 import io.github.nunes03.services.interfaces.ClienteServiceInterface;
+import io.github.nunes03.services.interfaces.ItemPedidoServiceInterface;
 import io.github.nunes03.services.interfaces.PedidoServiceInterface;
 import io.github.nunes03.services.interfaces.ProdutoServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -28,11 +29,12 @@ public class PedidoService implements PedidoServiceInterface {
 
     private final ProdutoServiceInterface produtoServiceInterface;
 
-    private final ItemPedidoRepository itemPedidoRepository;
+    private final ItemPedidoServiceInterface itemPedidoServiceInterface;
 
     @Override
+    @Transactional
     public Pedido create(PedidoDTO pedidoDTO) {
-        var pedido = createPedido(pedidoDTO);
+        var pedido = convertToPedido(pedidoDTO);
         var itensPedido = createItensPedido(pedido, pedidoDTO.getItens());
 
         pedido.setItensPedido(itensPedido);
@@ -65,8 +67,7 @@ public class PedidoService implements PedidoServiceInterface {
 
     }
 
-
-    private Pedido createPedido(PedidoDTO pedidoDTO) {
+    private Pedido convertToPedido(PedidoDTO pedidoDTO) {
         var pedido = new Pedido();
         pedido.setTotal(pedidoDTO.getTotal());
         pedido.setData(LocalDate.now());
@@ -91,7 +92,7 @@ public class PedidoService implements PedidoServiceInterface {
                 itemPedido.setProduto(produto);
                 itemPedido.setPedido(pedido);
 
-                itemPedido = itemPedidoRepository.save(itemPedido);
+                itemPedido = itemPedidoServiceInterface.create(itemPedido);
                 itens.add(itemPedido);
             }
         );

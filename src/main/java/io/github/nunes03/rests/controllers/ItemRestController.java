@@ -22,14 +22,12 @@ public class ItemRestController implements ItemPedidoRestControllerInterface {
     }
 
     @Override
-    @GetMapping()
     public List<ItemPedido> getAll() {
         return itemPedidoRepository.findAll();
     }
 
     @Override
-    @GetMapping(value = "/{id}")
-    public ItemPedido getById(@PathVariable(value = "id") Integer identifier) {
+    public ItemPedido getById(Integer identifier) {
         var clienteOptional = itemPedidoRepository.findById(identifier);
 
         return clienteOptional.orElseThrow(
@@ -41,14 +39,11 @@ public class ItemRestController implements ItemPedidoRestControllerInterface {
     }
 
     @Override
-    @PostMapping()
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ItemPedido postCreated(@RequestBody ItemPedido entity) {
+    public ItemPedido postCreated(ItemPedido entity) {
         return itemPedidoRepository.save(entity);
     }
 
     @Override
-    @PutMapping(value = "/{id}")
     public ItemPedido putUpdated(@RequestBody ItemPedido entity, @PathVariable("id") Integer identifier) {
         var clienteOptional = getById(identifier);
         entity.setId(clienteOptional.getId());
@@ -56,8 +51,7 @@ public class ItemRestController implements ItemPedidoRestControllerInterface {
         return itemPedidoRepository.save(entity);
     }
 
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @Override
     public void deleteById(@PathVariable("id") Integer identifier) {
         itemPedidoRepository.deleteById(
             getById(identifier).getId()
@@ -65,7 +59,6 @@ public class ItemRestController implements ItemPedidoRestControllerInterface {
     }
 
     @Override
-    @GetMapping(value = "/filter")
     public List<ItemPedido> getByExample(ItemPedido itemPedido) {
         var exampleMatcher = ExampleMatcher
             .matching()
