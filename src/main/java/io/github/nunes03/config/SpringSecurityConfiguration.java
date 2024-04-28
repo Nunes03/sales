@@ -2,6 +2,7 @@ package io.github.nunes03.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,16 +35,15 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .csrf()
             .disable()
-        ;
-
-        http
             .authorizeRequests()
             .antMatchers("/api/cliente/**", "/api/pedido/**")
             .hasAnyRole("ADMIN", "USER")
             .antMatchers("/api/produto/**")
             .hasRole("ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/usuario/")
+            .permitAll()
+            .and()
+            .httpBasic()
         ;
-
-        http.httpBasic();
     }
 }
